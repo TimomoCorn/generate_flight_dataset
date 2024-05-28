@@ -1,13 +1,15 @@
-# main.py
+"""Lance le script et génère des données aléatoires pour les tables de la base de données."""
 from bdd import get_engine, create_all_tables, get_session
 from generate_data import generate_data
 import os
 import csv
 
 def to_dict(obj):
+    """Convertit un objet SQLAlchemy en dictionnaire Python."""
     return {column.key: getattr(obj, column.key) for column in obj.__table__.columns}
 
 def export_to_csv(session, model_class, filename):
+    """Exporte les données d'une table au format CSV."""
     data = session.query(model_class).all()
     dict_data = [to_dict(record) for record in data]
 
@@ -22,13 +24,14 @@ def export_to_csv(session, model_class, filename):
                 writer.writerow(record)
 
 def main():
+    """Fonction principale du script."""
     engine = get_engine()
     create_all_tables(engine)
     session = get_session(engine)
     
     generate_data(session)
 
-    # Export data to CSV
+    # Export des données au format CSV
     from bdd import Airport, Airline, Aircraft, AircraftAirportAirlineFlight, Passenger, PassengerFlightBooking, FlightEvent
     
     export_to_csv(session, Airport, 'airports')
@@ -39,7 +42,7 @@ def main():
     export_to_csv(session, PassengerFlightBooking, 'bookings')
     export_to_csv(session, FlightEvent, 'flight_events')
 
-    # Don't forget to commit any changes and close the session when done
+    # Fermeture de la session
     session.commit()
     session.close()
 

@@ -1,4 +1,4 @@
-# generate_data.py
+"""Génere des données aléatoires pour les tables de la base de données."""
 from faker import Faker
 from sqlalchemy.orm import sessionmaker
 from bdd import get_engine, create_all_tables, get_session, AddressRef, Airport, Airline, Aircraft, AircraftAirportAirlineFlight, Passenger, PassengerFlightBooking, FlightEvent
@@ -6,7 +6,18 @@ from bdd import get_engine, create_all_tables, get_session, AddressRef, Airport,
 fake = Faker()
 
 def generate_data(session):
-    # Step 1: Generate data for AddressRef, Airport, and Airline
+    """Génère des données aléatoires pour les tables de la base de données.
+    Les tables remplies sont les suivantes: 
+        - address_ref;
+        - airports;
+        - airlines;
+        - aircrafts;
+        - aircrafts_airports_airlines_flights;
+        - passengers;
+        - passengers_flights_bookings;
+        - flight_events."""
+
+    # Étape 1 : Générer des données pour les aéroports et les compagnies aériennes
     for _ in range(10):
         address = AddressRef()
         session.add(address)
@@ -34,7 +45,7 @@ def generate_data(session):
 
     session.commit()
 
-    # Step 2: Generate data for Aircraft
+    # Étape 2 : Générer des données pour les avions
     for _ in range(30):
         aircraft = Aircraft(
             manufacturer=fake.company(),
@@ -50,7 +61,7 @@ def generate_data(session):
 
     session.commit()
 
-    # Step 3: Generate data for Flights
+    # Étape 3 : Générer des données pour les vols
     aircraft_ids = [aircraft.aircraft_id for aircraft in session.query(Aircraft).all()]
     airport_ids = [airport.airport_id for airport in session.query(Airport).all()]
     airline_ids = [airline.airline_id for airline in session.query(Airline).all()]
@@ -73,7 +84,7 @@ def generate_data(session):
 
     session.commit()
 
-    # Step 4: Generate data for Passengers and Bookings
+    # Étape 4 : Générer des données pour les passagers et les réservations
     for _ in range(100):
         address = AddressRef()
         session.add(address)
@@ -113,7 +124,7 @@ def generate_data(session):
 
     session.commit()
 
-    # Step 5: Generate data for Flight Events
+    # Étape 5 : Générer des données pour les événements de vol
     for _ in range(50):
         event = FlightEvent(
             delay_reason_id=fake.random_int(min=1, max=10),
