@@ -14,7 +14,7 @@ Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur 
 1. Cloner le projet depuis le référentiel GitHub :
 
     ```bash
-    git clone https://github.com/TimomoCorn/generate_flight_dataset.git
+    git clone https://github.com/timotheicorneille/generate_flight_dataset.git
     ```
 
 2. Accéder au répertoire du projet :
