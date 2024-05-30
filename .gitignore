@@ -1,4 +1,5 @@
 .env/
 data/
 example.db
+example.db-journal
 __pycache__/
