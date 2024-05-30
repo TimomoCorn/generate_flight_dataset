@@ -1,5 +1,9 @@
 import os
 import csv
+import re
+
+# Pattern REGEX de notre numéro de siège (exemple: A1, B12, C3, etc.)
+SEAT_NUMBER_PATTERN = re.compile(r'^[A-F](?:[1-9]|[1-4][0-9]|50)$')
 
 def to_dict(obj):
     """Convertit un objet SQLAlchemy en dictionnaire Python."""
@@ -15,7 +19,7 @@ def export_to_csv(session, model_class, filename):
 
         with open(f'data/{filename}.csv', 'w', newline='', encoding='utf-8') as csvfile:
             fieldnames = dict_data[0].keys()
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames, delimiter=';')
             writer.writeheader()
             for record in dict_data:
                 writer.writerow(record)

@@ -2,8 +2,6 @@
 from bdd import get_engine, create_all_tables, get_session
 from generate_data import generate_data
 from utilities import export_to_csv, to_dict
-import os
-import csv
 
 def main():
     """Fonction principale du script."""

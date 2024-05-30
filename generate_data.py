@@ -2,6 +2,8 @@
 from faker import Faker
 from sqlalchemy.orm import sessionmaker
 from bdd import get_engine, create_all_tables, get_session, AddressRef, Airport, Airline, Aircraft, AircraftAirportAirlineFlight, Passenger, PassengerFlightBooking, FlightEvent
+from utilities import SEAT_NUMBER_PATTERN
+import rstr
 
 fake = Faker()
 
@@ -113,7 +115,7 @@ def generate_data(session):
             passenger_id=fake.random_element(elements=passenger_ids),
             flight_id=fake.random_element(elements=flight_ids),
             booking_date=fake.date_time(),
-            seat_number=fake.bothify(text='??###'),
+            seat_number = rstr.xeger(SEAT_NUMBER_PATTERN),
             class_=fake.word(),
             creation_date=fake.date_time(),
             created_by=fake.random_int(min=1, max=10),
