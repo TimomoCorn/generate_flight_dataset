@@ -5,7 +5,8 @@ from bdd import (get_engine, create_all_tables, get_session,
                  AddressRef, Airport, Airline, Aircraft, AircraftAirportAirlineFlight,
                  Passenger, PassengerFlightBooking, FlightEvent, TravelRestriction, 
                  FlightEventTL, TravelRestriction, TravelRestrictionTL)
-from utilities import SEAT_NUMBER_PATTERN
+from utilities import (SEAT_NUMBER_PATTERN, FLIGHT_STATUSES, FLIGHT_CLASSES, 
+                       AIRCRAFT_TYPE, AIRCRAFT_STATUSES)
 import rstr
 
 fake = Faker()
@@ -55,9 +56,9 @@ def generate_data(session):
     for _ in range(30):
         aircraft = Aircraft(
             manufacturer=fake.company(),
-            type=fake.word(),
+            type=fake.random_element(elements=AIRCRAFT_TYPE),
             places=fake.random_int(min=50, max=500),
-            status=fake.word(),
+            status=fake.random_element(elements=AIRCRAFT_STATUSES),
             creation_date=fake.date_time(),
             created_by=fake.random_int(min=1, max=10),
             last_modification_date=fake.date_time(),
@@ -80,7 +81,7 @@ def generate_data(session):
             airline_id=fake.random_element(elements=airline_ids),
             departure_time=fake.date_time(),
             arrival_time=fake.date_time(),
-            status=fake.word(),
+            status=fake.random_element(elements=FLIGHT_STATUSES),
             creation_date=fake.date_time(),
             created_by=fake.random_int(min=1, max=10),
             last_modification_date=fake.date_time(),
@@ -120,7 +121,7 @@ def generate_data(session):
             flight_id=fake.random_element(elements=flight_ids),
             booking_date=fake.date_time(),
             seat_number=rstr.xeger(SEAT_NUMBER_PATTERN),
-            class_=fake.word(),
+            class_=fake.random_element(elements=FLIGHT_CLASSES),
             creation_date=fake.date_time(),
             created_by=fake.random_int(min=1, max=10),
             last_modification_date=fake.date_time(),
