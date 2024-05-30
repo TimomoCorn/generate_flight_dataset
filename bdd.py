@@ -1,5 +1,5 @@
 """Met en place la base de données et les tables nécessaires pour le projet"""
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, create_engine, UniqueConstraint
 from sqlalchemy.orm import relationship, sessionmaker, declarative_base
 
 Base = declarative_base()
@@ -97,8 +97,8 @@ class TravelRestrictionTL(Base):
     __tablename__ = 'travel_restrictions_tl'
 
     requirement_id = Column(Integer, primary_key=True)
-    language = Column(String(50))
-    description = Column(String(255))
+    language = Column(String(50), primary_key=True, nullable=False)
+    description = Column(String(255), nullable=False)
     creation_date = Column(DateTime)
     created_by = Column(Integer)
     last_modification_date = Column(DateTime)
@@ -177,12 +177,11 @@ class FlightEventH(Base):
 
 class FlightEventTL(Base):
     """Table de traduction des événements de vol"""
-
     __tablename__ = 'flights_events_tl'
 
     reason_id = Column(Integer, primary_key=True)
-    language = Column(String(50))
-    description = Column(String(255))
+    language = Column(String(50), primary_key=True, nullable=False)
+    description = Column(String(255), nullable=False)
     creation_date = Column(DateTime)
     created_by = Column(Integer)
     last_modification_date = Column(DateTime)

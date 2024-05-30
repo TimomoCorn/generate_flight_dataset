@@ -1,7 +1,10 @@
 """Génere des données aléatoires pour les tables de la base de données."""
 from faker import Faker
 from sqlalchemy.orm import sessionmaker
-from bdd import get_engine, create_all_tables, get_session, AddressRef, Airport, Airline, Aircraft, AircraftAirportAirlineFlight, Passenger, PassengerFlightBooking, FlightEvent
+from bdd import (get_engine, create_all_tables, get_session, 
+                 AddressRef, Airport, Airline, Aircraft, AircraftAirportAirlineFlight,
+                 Passenger, PassengerFlightBooking, FlightEvent, TravelRestriction, 
+                 FlightEventTL, TravelRestriction, TravelRestrictionTL)
 from utilities import SEAT_NUMBER_PATTERN
 import rstr
 
@@ -17,7 +20,8 @@ def generate_data(session):
         - aircrafts_airports_airlines_flights;
         - passengers;
         - passengers_flights_bookings;
-        - flight_events."""
+        - flight_events;
+        - tables historiques et tables de traduction."""
 
     # Étape 1 : Générer des données pour les aéroports et les compagnies aériennes
     for _ in range(10):
@@ -115,7 +119,7 @@ def generate_data(session):
             passenger_id=fake.random_element(elements=passenger_ids),
             flight_id=fake.random_element(elements=flight_ids),
             booking_date=fake.date_time(),
-            seat_number = rstr.xeger(SEAT_NUMBER_PATTERN),
+            seat_number=rstr.xeger(SEAT_NUMBER_PATTERN),
             class_=fake.word(),
             creation_date=fake.date_time(),
             created_by=fake.random_int(min=1, max=10),
@@ -140,5 +144,50 @@ def generate_data(session):
             last_modified_by=fake.random_int(min=1, max=10)
         )
         session.add(event)
+
+    session.commit()
+
+    # Étape 6 : Générer des données pour les restrictions de voyage et leurs traductions
+    for _ in range(20):
+        restriction = TravelRestriction(
+            requirement_id=fake.random_int(min=1, max=100),
+            from_country=fake.country(),
+            to_country=fake.country(),
+            creation_date=fake.date_time(),
+            created_by=fake.random_int(min=1, max=10),
+            last_modification_date=fake.date_time(),
+            last_modified_by=fake.random_int(min=1, max=10)
+        )
+        session.add(restriction)
+        session.commit()  # Commit après l'ajout de la restriction pour obtenir restriction_id
+
+        for lang in ['en', 'fr', 'de', 'es']:
+            restriction_tl = TravelRestrictionTL(
+                requirement_id=restriction.restriction_id,
+                language=lang,
+                description=fake.text(max_nb_chars=200),
+                creation_date=fake.date_time(),
+                created_by=fake.random_int(min=1, max=10),
+                last_modification_date=fake.date_time(),
+                last_modified_by=fake.random_int(min=1, max=10)
+            )
+            session.add(restriction_tl)
+
+    session.commit()
+
+    # Étape 7 : Générer des données pour les traductions des événements de vol
+    for _ in range(10):
+        reason_id = fake.random_int(min=1, max=100)
+        for lang in ['en', 'fr', 'de', 'es']:
+            event_tl = FlightEventTL(
+                reason_id=reason_id,
+                language=lang,
+                description=fake.text(max_nb_chars=200),
+                creation_date=fake.date_time(),
+                created_by=fake.random_int(min=1, max=10),
+                last_modification_date=fake.date_time(),
+                last_modified_by=fake.random_int(min=1, max=10)
+            )
+            session.add(event_tl)
 
     session.commit()

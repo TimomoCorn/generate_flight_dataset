@@ -11,7 +11,10 @@ def main():
     
     generate_data(session)
 
-    from bdd import Airport, Airline, Aircraft, AircraftAirportAirlineFlight, Passenger, PassengerFlightBooking, FlightEvent
+    from bdd import (Airport, Airline, Aircraft,
+                     AircraftAirportAirlineFlight, Passenger,
+                     PassengerFlightBooking, FlightEvent, FlightEventTL, 
+                     TravelRestriction, TravelRestrictionTL)
     
     # Export des données au format CSV
     export_to_csv(session, Airport, 'airports')
@@ -21,6 +24,9 @@ def main():
     export_to_csv(session, Passenger, 'passengers')
     export_to_csv(session, PassengerFlightBooking, 'bookings')
     export_to_csv(session, FlightEvent, 'flight_events')
+    export_to_csv(session, FlightEventTL, 'flight_events_tl')
+    export_to_csv(session, TravelRestriction, 'travel_restrictions')
+    export_to_csv(session, TravelRestrictionTL, 'travel_restrictions_tl')
 
     # Fermeture de la session
     session.commit()
